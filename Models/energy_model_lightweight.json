@@ -1,0 +1,106 @@
+{
+  "model_type": "GradientBoostingRegressor",
+  "framework": "MultiOutputRegressor",
+  "hyperparameters": {
+    "n_estimators": 200,
+    "learning_rate": 0.05,
+    "max_depth": 5,
+    "min_samples_split": 10,
+    "min_samples_leaf": 4,
+    "subsample": 0.8,
+    "random_state": 42
+  },
+  "feature_names": [
+    "Temperature",
+    "Humidity",
+    "Light",
+    "HumidityRatio",
+    "light_out",
+    "humidity_solar_out",
+    "temperature_out",
+    "wind_speed_out",
+    "atmp_out",
+    "humidity_wind_out",
+    "Occupancy",
+    "main"
+  ],
+  "outputs": [
+    "solar_output",
+    "wind_output"
+  ],
+  "feature_importance": {
+    "solar": {
+      "Temperature": 0.0005310757697875905,
+      "Humidity": 0.0005727135103981572,
+      "Light": 0.00028494374282743814,
+      "HumidityRatio": 0.00048698929588616286,
+      "light_out": 0.9812320835000867,
+      "humidity_solar_out": 0.0036223225247669793,
+      "temperature_out": 0.00963614924991579,
+      "wind_speed_out": 0.0007147600860629698,
+      "atmp_out": 0.0009259044262380666,
+      "humidity_wind_out": 0.0009303101486847207,
+      "Occupancy": 6.1488212508949565e-06,
+      "main": 0.0010565989240946144
+    },
+    "wind": {
+      "Temperature": 0.0004384377613553618,
+      "Humidity": 0.0004978482302043727,
+      "Light": 0.0002798872433641223,
+      "HumidityRatio": 0.0005776348837462652,
+      "light_out": 0.0006873957481961186,
+      "humidity_solar_out": 0.000676383681115042,
+      "temperature_out": 0.0006736916515295852,
+      "wind_speed_out": 0.9786924951754689,
+      "atmp_out": 0.010568034186608071,
+      "humidity_wind_out": 0.0060768918927211835,
+      "Occupancy": 7.881424123016443e-06,
+      "main": 0.0008234181215679989
+    }
+  },
+  "prediction_logic": {
+    "description": "Gradient Boosting prediction formula",
+    "formula": "prediction = init_prediction + learning_rate * sum(tree_predictions)",
+    "steps": [
+      "1. Start with init_prediction",
+      "2. For each tree, traverse from root to leaf based on feature values",
+      "3. Multiply leaf value by learning_rate",
+      "4. Sum all tree predictions",
+      "5. Add to init_prediction"
+    ]
+  },
+  "energy_decision_logic": {
+    "description": "Logic to decide which energy source to use",
+    "safety_margin": 1.1,
+    "rules": [
+      {
+        "condition": "total_renewable >= 1.1 * mains_demand AND solar >= mains_demand",
+        "decision": "Use Solar only"
+      },
+      {
+        "condition": "total_renewable >= 1.1 * mains_demand AND wind >= mains_demand",
+        "decision": "Use Wind only"
+      },
+      {
+        "condition": "total_renewable >= 1.1 * mains_demand AND solar < mains_demand AND wind < mains_demand",
+        "decision": "Use Solar + Wind"
+      },
+      {
+        "condition": "total_renewable < 1.1 * mains_demand",
+        "decision": "Use Mains (with available renewable)"
+      }
+    ]
+  },
+  "models_summary": {
+    "solar": {
+      "n_trees": 200,
+      "learning_rate": 0.05,
+      "init_prediction": 500.2637977639044
+    },
+    "wind": {
+      "n_trees": 200,
+      "learning_rate": 0.05,
+      "init_prediction": 194.58070671299848
+    }
+  }
+}
