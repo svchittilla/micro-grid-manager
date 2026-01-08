@@ -1,6 +1,7 @@
 # micro-grid-manager
 
 ## Units
+```
 main                  : Watts (W)
 solar_output          : Watts (W)
 wind_output           : Watts (W)
@@ -13,3 +14,4 @@ temperature_out       : Degrees Celsius (°C)
 wind_speed_out        : Meters per second (m/s)
 atmp_out              : Degrees Celsius (°C)
 humidity_wind_out     : Relative Humidity (%)
+```
